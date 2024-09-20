@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -35,7 +36,6 @@ namespace Player.Scripts.Pyke
                 var grapedbody2D = graped.GetComponent<Rigidbody2D>();
                 _grapedbody2D = grapedbody2D;
                 StartCoroutine(PullOpponentFlow());
-
             }
         }
 

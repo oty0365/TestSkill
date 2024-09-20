@@ -20,10 +20,18 @@ namespace Player.Scripts
         public GameObject gostPrefab;
         private int _moveMode;
         private LineRenderer _lr;
+        private SpriteRenderer _sr;
+        private GameObject _underWaterDive;
+        private bool _canDive;
         private GameObject _gost;
         private BoxCollider2D _bcol2D;
         private void Start()
         {
+            _underWaterDive = transform.GetChild(3).gameObject;
+            _underWaterDive.SetActive(false);
+            _sr = GetComponent<SpriteRenderer>();
+            Debug.Log(_sr);
+            _canDive = true;
             _bcol2D = GetComponent<BoxCollider2D>();
             _moveMode = 0;
             isDashing = false;
@@ -43,6 +51,7 @@ namespace Player.Scripts
             BoneSkewer();
             MoveInput();
             PhantomUndertow();
+            GhostWaterDive();
         }
 
         private void FixedUpdate()
@@ -106,9 +115,9 @@ namespace Player.Scripts
 
         private void GhostWaterDive()
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyDown(KeyCode.LeftShift)&&_canDive)
             {
-                
+                StartCoroutine(DiveFlow());
             }
         }
         private IEnumerator StashKnife()
@@ -195,7 +204,30 @@ namespace Player.Scripts
             _eye.transform.localScale = new Vector3(0.1f,0.1f,1);
             _eye.SetActive(false);
         }
-        
+
+        private IEnumerator DiveFlow()
+        {
+            _canDive = false;
+            _underWaterDive.SetActive(true);
+            _sr.color = new Color(1, 1, 1, 0.5f);
+            moveSpeed = 5f;
+            for (var i = 0f; i <= 4f; i += Time.deltaTime)
+            {
+                if (isDashing || _isPressed)
+                {
+                    break;
+                }   
+                if (moveSpeed > 3.1)
+                {
+                    moveSpeed -= Time.deltaTime;
+                }
+                yield return null;
+            }
+            moveSpeed = 3.1f;
+            _underWaterDive.SetActive(false);
+            _sr.color = new Color(1, 1, 1, 1);
+            _canDive = true;
+        }
         
     }
 }
