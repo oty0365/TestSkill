@@ -93,14 +93,22 @@ namespace Player.Scripts
 
         private void PhantomUndertow()
         {
-            if (isDashing)
+            if (!_canDash)
             {
                 _lr.SetPosition(0,_gost.transform.position);
                 _lr.SetPosition(1,gameObject.transform.position);
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space)&&_canDash)
             {
                 StartCoroutine(Dash());
+            }
+        }
+
+        private void GhostWaterDive()
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                
             }
         }
         private IEnumerator StashKnife()
@@ -131,15 +139,6 @@ namespace Player.Scripts
                 yield return null;
             }
             rb.velocity = new Vector2(0, 0);
-            /*rb.AddForce(_firePoint.up*-17f,ForceMode2D.Impulse);
-
-            for (var i = 0f; i <= throwtime / 4f; i += Time.deltaTime)
-            {
-
-                lr.SetPosition(0,knife.transform.position);
-                lr.SetPosition(1,gameObject.transform.position);
-                yield return null;
-            }*/
             Destroy(knife);
             _canStash = true;
             canMove = true;
@@ -154,24 +153,27 @@ namespace Player.Scripts
             _gost = gost;
             _lr = lr;
             isDashing = true;
+            _canDash = false;
             _bcol2D.excludeLayers = LayerMask.GetMask("wall");
                 for (var i = 0f; i <= 0.12f; i += Time.deltaTime)
                 {
-                    rb2D.MovePosition(Vector2.MoveTowards(gameObject.transform.position, _mousePos, 250 * Time.deltaTime));
+                    rb2D.MovePosition(Vector2.MoveTowards(gameObject.transform.position, _mousePos, 0.5f));//250 * Time.deltaTime));
                     lr.SetPosition(0,gost.transform.position);
                     lr.SetPosition(1,gameObject.transform.position);
                     yield return null;
                 }
+                isDashing = false;
                 _bcol2D.excludeLayers = LayerMask.NameToLayer("Default"); 
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.82f);
                 for (var i = 0f; i <= 0.12f; i += Time.deltaTime)
                 {
-                    rb.MovePosition(Vector2.MoveTowards(rb.position, gameObject.transform.position, 250 * Time.deltaTime));
+                    rb.MovePosition(Vector2.MoveTowards(rb.position, gameObject.transform.position,0.5f));//250 * Time.deltaTime));
                     lr.SetPosition(0,gost.transform.position);
                     lr.SetPosition(1,gameObject.transform.position);
                     yield return null;
                 }
-            isDashing = false;
+
+                _canDash = true;
             Destroy(gost);
             rb2D.velocity = new Vector2(0, 0);
 
@@ -193,6 +195,7 @@ namespace Player.Scripts
             _eye.transform.localScale = new Vector3(0.1f,0.1f,1);
             _eye.SetActive(false);
         }
+        
         
     }
 }

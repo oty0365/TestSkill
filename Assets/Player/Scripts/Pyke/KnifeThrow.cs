@@ -43,7 +43,7 @@ namespace Player.Scripts.Pyke
         {
             for (var i = 0f; i <= 0.6; i += Time.deltaTime)
             {
-                _grapedbody2D.MovePosition(Vector2.MoveTowards(_grapedbody2D.position,_pyke.transform.position,100f*Time.deltaTime));
+                _grapedbody2D.MovePosition(Vector2.MoveTowards(_grapedbody2D.position, _pyke.transform.position, 0.3f));//100f*Time.deltaTime));
                 yield return null;
             }
             //Destroy(gameObject);
