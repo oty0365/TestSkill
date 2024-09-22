@@ -19,7 +19,7 @@ namespace Player.Scripts
         private float _vertical;
         protected Rigidbody2D rb2D;
         protected bool canMove;
-
+        [SerializeField] protected float hp; 
 
         protected void MoveInput()
         {

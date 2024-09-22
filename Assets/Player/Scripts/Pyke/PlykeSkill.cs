@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.XR;
 
 namespace Player.Scripts
@@ -18,6 +20,7 @@ namespace Player.Scripts
         private Transform _firePoint;
         public GameObject knifePrefab;
         public GameObject gostPrefab;
+        public GameObject excutePrefab;
         private int _moveMode;
         private LineRenderer _lr;
         private SpriteRenderer _sr;
@@ -25,6 +28,7 @@ namespace Player.Scripts
         private bool _canDive;
         private GameObject _gost;
         private BoxCollider2D _bcol2D;
+        private bool _canExcute;
         private void Start()
         {
             _underWaterDive = transform.GetChild(3).gameObject;
@@ -38,6 +42,7 @@ namespace Player.Scripts
             canMove = true;
             _canStash = true;
             _canDash = true;
+            _canExcute = true;
             _knife = transform.GetChild(0).gameObject;
             _eye = transform.GetChild(2).gameObject;
             _knife2D = GameObject.FindWithTag("pyke").GetComponent<Rigidbody2D>();
@@ -52,6 +57,7 @@ namespace Player.Scripts
             MoveInput();
             PhantomUndertow();
             GhostWaterDive();
+            DeathFromBelow();
         }
 
         private void FixedUpdate()
@@ -118,6 +124,14 @@ namespace Player.Scripts
             if (Input.GetKeyDown(KeyCode.LeftShift)&&_canDive)
             {
                 StartCoroutine(DiveFlow());
+            }
+        }
+
+        private void DeathFromBelow()
+        {
+            if (Input.GetKeyDown(KeyCode.R)&&Vector2.Distance(_mousePos,gameObject.transform.position)<9f&&_canExcute)
+            {
+                StartCoroutine(ExecutionFlow());
             }
         }
         private IEnumerator StashKnife()
@@ -227,6 +241,26 @@ namespace Player.Scripts
             _underWaterDive.SetActive(false);
             _sr.color = new Color(1, 1, 1, 1);
             _canDive = true;
+        }
+
+        private IEnumerator ExecutionFlow()
+        {
+            _canExcute = false;
+            var e = Instantiate(excutePrefab, _mousePos, Quaternion.identity);
+            var sr = e.GetComponent<SpriteRenderer>();
+            var col = e.GetComponent<BoxCollider2D>();
+            col.enabled = false;
+            sr.color = new Color(1, 1, 0, 1);
+            for (var i = 1f; i >= 0f; i -= Time.deltaTime*3)
+            {
+                sr.color = new Color(1, i, 0, 1);
+                yield return null;
+            }
+
+            gameObject.transform.position = e.transform.position;
+            yield return new WaitForSeconds(2f);
+            Destroy(e);
+            _canExcute = true;
         }
         
     }
