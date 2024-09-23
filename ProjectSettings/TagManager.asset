@@ -8,6 +8,7 @@ TagManager:
   - gost
   - enemy
   - wall
+  - entity
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - UI
   - pyke
   - wall
-  - 
+  - object
   - 
   - 
   - 

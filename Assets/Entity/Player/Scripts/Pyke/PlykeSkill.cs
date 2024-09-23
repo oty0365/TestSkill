@@ -16,7 +16,6 @@ namespace Player.Scripts
         private bool _isPressed;
         private float _pressTime;
         private float _previousPressed;
-        private Rigidbody2D _knife2D;
         private Transform _firePoint;
         public GameObject knifePrefab;
         public GameObject gostPrefab;
@@ -45,7 +44,6 @@ namespace Player.Scripts
             _canExcute = true;
             _knife = transform.GetChild(0).gameObject;
             _eye = transform.GetChild(2).gameObject;
-            _knife2D = GameObject.FindWithTag("pyke").GetComponent<Rigidbody2D>();
             rb2D = GetComponent<Rigidbody2D>();
             _eye.SetActive(false);
         }
@@ -173,10 +171,12 @@ namespace Player.Scripts
             var gost = Instantiate(gostPrefab, _firePoint.position, _firePoint.rotation);
             var rb = gost.GetComponent<Rigidbody2D>();
             var lr = gost.GetComponent<LineRenderer>();
+            var col = gost.GetComponent<BoxCollider2D>();
             _gost = gost;
             _lr = lr;
             isDashing = true;
             _canDash = false;
+            col.enabled = false;
             _bcol2D.excludeLayers = LayerMask.GetMask("wall");
                 for (var i = 0f; i <= 0.12f; i += Time.deltaTime)
                 {
@@ -188,18 +188,22 @@ namespace Player.Scripts
                 isDashing = false;
                 _bcol2D.excludeLayers = LayerMask.NameToLayer("Default"); 
                 yield return new WaitForSeconds(0.82f);
-                for (var i = 0f; i <= 0.12f; i += Time.deltaTime)
+                col.enabled = true;
+                while (true)
                 {
+                    if (Vector2.Distance(rb.position,transform.position)<0.5f)
+                    {
+                        break;
+                    }
                     rb.MovePosition(Vector2.MoveTowards(rb.position, gameObject.transform.position,0.5f));//250 * Time.deltaTime));
                     lr.SetPosition(0,gost.transform.position);
                     lr.SetPosition(1,gameObject.transform.position);
                     yield return null;
-                }
 
+                }   
                 _canDash = true;
-            Destroy(gost);
-            rb2D.velocity = new Vector2(0, 0);
-
+                Destroy(gost);
+                rb2D.velocity = new Vector2(0, 0);
         }
 
         private IEnumerator EyeGlowFlow()
@@ -246,7 +250,7 @@ namespace Player.Scripts
         private IEnumerator ExecutionFlow()
         {
             _canExcute = false;
-            var e = Instantiate(excutePrefab, _mousePos, Quaternion.identity);
+            var e = Instantiate(excutePrefab, _mousePos, Quaternion.Euler(0,0,45f));
             var sr = e.GetComponent<SpriteRenderer>();
             var col = e.GetComponent<BoxCollider2D>();
             col.enabled = false;
@@ -257,6 +261,7 @@ namespace Player.Scripts
                 yield return null;
             }
 
+            col.enabled = true;
             gameObject.transform.position = e.transform.position;
             yield return new WaitForSeconds(2f);
             Destroy(e);

@@ -683,11 +683,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3d1e783ddef53f47a5d71c64f4e115a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 0
+  Status: 0
   mainCam: {fileID: 519420031}
   moveSpeed: 3.3
   ableToDash: 1
   _mousePos: {x: 0, y: 0, z: 0}
-  hp: 0
   knifePrefab: {fileID: 5830565813351060698, guid: 513acd8eec888614a814970978f35354, type: 3}
   gostPrefab: {fileID: 4314180539151926964, guid: 764dd2ab9bbf87e43826ab1b06338c62, type: 3}
   excutePrefab: {fileID: 4964939741651411327, guid: 16225e85498eb934094c07ff775ee5e7, type: 3}
@@ -747,6 +748,10 @@ PrefabInstance:
     - target: {fileID: 359490743299774691, guid: cd971f0cdc091f549b43b5e048e6d5f5, type: 3}
       propertyPath: m_Name
       value: Dummy
+      objectReference: {fileID: 0}
+    - target: {fileID: 359490743299774691, guid: cd971f0cdc091f549b43b5e048e6d5f5, type: 3}
+      propertyPath: m_TagString
+      value: entity
       objectReference: {fileID: 0}
     - target: {fileID: 3276204152377560820, guid: cd971f0cdc091f549b43b5e048e6d5f5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -866,7 +871,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 5
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0.7830189, b: 0.26878265, a: 1}
   m_FlipX: 0

@@ -27,14 +27,16 @@ namespace Player.Scripts.Pyke
         }
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("enemy"))
+            if (other.CompareTag("entity"))
             {
                 _sr.color = new Color(255, 255, 255, 0);
                 _lr.enabled = false;
                 _bcol2D.enabled = false;
                 var graped = other.gameObject;
                 var grapedbody2D = graped.GetComponent<Rigidbody2D>();
+                var e = other.gameObject.GetComponent<Entity.Entity>();
                 _grapedbody2D = grapedbody2D;
+                e.hp -= 20;
                 StartCoroutine(PullOpponentFlow());
             }
         }

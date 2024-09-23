@@ -4,6 +4,8 @@ namespace System
     {
         Stun,
         LowHp,
-        Stealth
+        Stealth,
+        Normal,
+        Graped
     }
 }
